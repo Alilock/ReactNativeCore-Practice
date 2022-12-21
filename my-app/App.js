@@ -1,14 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  LogBox,
-} from "react-native";
+import { useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import Card from "./Card";
 export default function App() {
   const datas = [
@@ -86,26 +78,22 @@ export default function App() {
     },
   ];
   const [updatedDatas, setUpdated] = useState(datas);
-
-  // useEffect(() => {
-  //   const setUpdatedHandler = (name) => {
-  //     console.log(name);
-  //     const selectedArr = datas.filter((data) => data.name !== "");
-  //     let updated = datas.map((element) => {
-  //       console.log(element.name);
-  //     });
-  //   };
-  //   setUpdatedHandler();
-  // }, []);
-  const renderItem = async ({ item }) => (
-    <Card
-      icon={item.icon}
-      name={item.name}
-      size={item.size}
-      updated={item.updated}
-      updateHandler={setUpdatedHandler}
-    />
-  );
+  const updatedHandler = (name, updated) => {
+    const objIndex = updatedDatas.findIndex((e) => e.name == name);
+    updatedDatas[objIndex].updated = !updated;
+    setUpdated([...updatedDatas]);
+  };
+  const renderItem = ({ item }) => {
+    return (
+      <Card
+        icon={item.icon}
+        name={item.name}
+        size={item.size}
+        updated={item.updated}
+        updatedHandler={updatedHandler}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -122,7 +110,7 @@ export default function App() {
           marginTop: 50,
         }}
         data={updatedDatas}
-        renderItem={renderItem}
+        renderItem={(item) => renderItem(item)}
       />
     </View>
   );
